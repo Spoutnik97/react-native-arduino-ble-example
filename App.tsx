@@ -1,76 +1,91 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
+import React, {useReducer, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  StatusBar,
+  Button,
   View,
   Text,
-  StatusBar,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
+import {BleManager, Device} from 'react-native-ble-plx';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {DeviceCard} from './src/components/DeviceCard';
 
-declare const global: {HermesInternal: null | {}};
+const manager = new BleManager();
 
+const reducer = (
+  state: Device[],
+  action: {type: 'ADD_DEVICE'; payload: Device} | {type: 'CLEAR'},
+): Device[] => {
+  switch (action.type) {
+    case 'ADD_DEVICE':
+      const {payload: device} = action;
+      if (device && !state.find((dev) => dev.id === device.id)) {
+        return [...state, device];
+      }
+      return state;
+    case 'CLEAR':
+      return [];
+    default:
+      return state;
+  }
+};
 const App = () => {
+  const [scannedDevices, dispatch] = useReducer(reducer, []);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const scanDevices = () => {
+    setIsLoading(true);
+
+    manager.startDeviceScan(null, null, (error, scannedDevice) => {
+      if (error) {
+        console.warn(error);
+      }
+
+      if (scannedDevice) {
+        dispatch({type: 'ADD_DEVICE', payload: scannedDevice});
+      }
+    });
+
+    setTimeout(() => {
+      manager.stopDeviceScan();
+      console.warn('Scan stopped');
+      setIsLoading(false);
+    }, 5000);
+  };
+
+  const ListHeaderComponent = () => (
+    <View style={styles.body}>
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Step One</Text>
+      </View>
+      <View style={styles.sectionContainer}>
+        <Button
+          title="Clear devices"
+          onPress={() => dispatch({type: 'CLEAR'})}
+        />
+        {isLoading ? (
+          <ActivityIndicator />
+        ) : (
+          <Button title="Scan devices" onPress={scanDevices} />
+        )}
+      </View>
+    </View>
+  );
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={scannedDevices}
+          renderItem={({item}) => <DeviceCard device={item} />}
+          ListHeaderComponent={ListHeaderComponent}
+        />
       </SafeAreaView>
     </>
   );
@@ -79,10 +94,6 @@ const App = () => {
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
   },
   body: {
     backgroundColor: Colors.white,
@@ -101,17 +112,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '400',
     color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
   },
 });
 
