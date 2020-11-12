@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -76,6 +76,13 @@ const App = () => {
       </View>
     </View>
   );
+
+  const getConnectedDevices = async () => {};
+  useEffect(() => {
+    return () => {
+      manager.destroy();
+    };
+  }, []);
   return (
     <>
       <StatusBar barStyle="dark-content" />

@@ -28,7 +28,8 @@ const DeviceCard = ({device}: DeviceCardProps) => {
   return (
     <TouchableOpacity
       style={{backgroundColor: 'pink', margin: 12}}
-      onPress={getDeviceInformations}>
+      onPress={getDeviceInformations}
+      disabled={isConnected}>
       <Text>{`Id : ${device.id}`}</Text>
       <Text>{`Name : ${device.name}`}</Text>
       <Text>{`Is connected : ${isConnected}`}</Text>
