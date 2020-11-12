@@ -6,16 +6,6 @@ type ServiceCardProps = {
   service: Service;
 };
 
-const DescriptorComponent = ({descriptor}: {descriptor: Descriptor}) => {
-  return (
-    <View key={descriptor.id}>
-      <Text>{'Characteristic  : ' + descriptor.characteristicID}</Text>
-      <Text>{descriptor.value}</Text>
-      {/* <Text>{descriptor.read()}</Text> */}
-    </View>
-  );
-};
-
 const ServiceCard = ({service}: ServiceCardProps) => {
   const [descriptors, setDescriptors] = useState<Descriptor[]>([]);
   const [characteristics, setCharacteristics] = useState<Characteristic[]>([]);
