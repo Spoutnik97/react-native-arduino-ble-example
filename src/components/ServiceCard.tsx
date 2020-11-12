@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, Text, TouchableOpacity, View} from 'react-native';
-import {Characteristic, Descriptor, Service} from 'react-native-ble-plx';
+import React, { useEffect, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Characteristic, Descriptor, Service } from 'react-native-ble-plx';
 
 type ServiceCardProps = {
   service: Service;
 };
 
-const ServiceCard = ({service}: ServiceCardProps) => {
+const ServiceCard = ({ service }: ServiceCardProps) => {
   const [descriptors, setDescriptors] = useState<Descriptor[]>([]);
   const [characteristics, setCharacteristics] = useState<Characteristic[]>([]);
 
@@ -29,7 +29,7 @@ const ServiceCard = ({service}: ServiceCardProps) => {
         characteristics.map((char) => (
           <TouchableOpacity
             key={char.uuid}
-            style={{backgroundColor: 'teal', marginVertical: 6}}
+            style={{ backgroundColor: 'teal', marginVertical: 6 }}
             onPress={() => {
               char.monitor((err, cha) => {
                 console.warn('Notification');
@@ -61,4 +61,4 @@ const ServiceCard = ({service}: ServiceCardProps) => {
     </View>
   );
 };
-export {ServiceCard};
+export { ServiceCard };

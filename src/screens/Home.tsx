@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
@@ -7,11 +7,12 @@ import {
   Text,
   View,
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {DeviceCard} from '../components/DeviceCard';
-import {BleManager, Device} from 'react-native-ble-plx';
+import { FlatList } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { DeviceCard } from '../components/DeviceCard';
+import { BleManager, Device } from 'react-native-ble-plx';
+import { theme } from '../theme';
 
 type HomeScreenProps = {};
 
@@ -19,11 +20,11 @@ const manager = new BleManager();
 
 const reducer = (
   state: Device[],
-  action: {type: 'ADD_DEVICE'; payload: Device} | {type: 'CLEAR'},
+  action: { type: 'ADD_DEVICE'; payload: Device } | { type: 'CLEAR' },
 ): Device[] => {
   switch (action.type) {
     case 'ADD_DEVICE':
-      const {payload: device} = action;
+      const { payload: device } = action;
       if (device && !state.find((dev) => dev.id === device.id)) {
         return [...state, device];
       }
@@ -48,7 +49,7 @@ const HomeScreen = ({}: HomeScreenProps) => {
       }
 
       if (scannedDevice) {
-        dispatch({type: 'ADD_DEVICE', payload: scannedDevice});
+        dispatch({ type: 'ADD_DEVICE', payload: scannedDevice });
       }
     });
 
@@ -67,7 +68,7 @@ const HomeScreen = ({}: HomeScreenProps) => {
       <View style={styles.sectionContainer}>
         <Button
           title="Clear devices"
-          onPress={() => dispatch({type: 'CLEAR'})}
+          onPress={() => dispatch({ type: 'CLEAR' })}
         />
         {isLoading ? (
           <ActivityIndicator />
@@ -90,8 +91,9 @@ const HomeScreen = ({}: HomeScreenProps) => {
         <FlatList
           keyExtractor={(item) => item.id}
           data={scannedDevices}
-          renderItem={({item}) => <DeviceCard device={item} />}
+          renderItem={({ item }) => <DeviceCard device={item} />}
           ListHeaderComponent={ListHeaderComponent}
+          contentContainerStyle={styles.content}
         />
       </SafeAreaView>
     </>
@@ -120,6 +122,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: Colors.dark,
   },
+  content: {
+    backgroundColor: theme.colors.secondary,
+    paddingHorizontal: theme.spacing * 2,
+  },
 });
 
-export {HomeScreen};
+export { HomeScreen };
