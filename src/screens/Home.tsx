@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
-  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -85,18 +84,15 @@ const HomeScreen = ({}: HomeScreenProps) => {
     };
   }, []);
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <FlatList
-          keyExtractor={(item) => item.id}
-          data={scannedDevices}
-          renderItem={({ item }) => <DeviceCard device={item} />}
-          ListHeaderComponent={ListHeaderComponent}
-          contentContainerStyle={styles.content}
-        />
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={styles.body}>
+      <FlatList
+        keyExtractor={(item) => item.id}
+        data={scannedDevices}
+        renderItem={({ item }) => <DeviceCard device={item} />}
+        ListHeaderComponent={ListHeaderComponent}
+        contentContainerStyle={styles.content}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -105,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.lighter,
   },
   body: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.red,
   },
   sectionContainer: {
     marginTop: 32,
