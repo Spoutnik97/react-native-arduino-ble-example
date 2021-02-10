@@ -15,11 +15,10 @@ const DeviceScreen = ({
   const [services, setServices] = useState<Service[]>([]);
 
   const disconnectDevice = useCallback(async () => {
-    console.warn('Disconecting');
-
-    await device
-      .cancelConnection()
-      .catch((e) => console.warn('dicsonnected error', e));
+    const isDeviceConnected = await device.isConnected();
+    if (isDeviceConnected) {
+      await device.cancelConnection();
+    }
   }, [device]);
 
   useEffect(() => {

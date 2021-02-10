@@ -54,7 +54,6 @@ const HomeScreen = ({}: HomeScreenProps) => {
 
     setTimeout(() => {
       manager.stopDeviceScan();
-      console.warn('Scan stopped');
       setIsLoading(false);
     }, 5000);
   };
@@ -70,7 +69,9 @@ const HomeScreen = ({}: HomeScreenProps) => {
           onPress={() => dispatch({ type: 'CLEAR' })}
         />
         {isLoading ? (
-          <ActivityIndicator />
+          <View style={{ marginVertical: 6 }}>
+            <ActivityIndicator color={'teal'} size={25} />
+          </View>
         ) : (
           <Button title="Scan devices" onPress={scanDevices} />
         )}
