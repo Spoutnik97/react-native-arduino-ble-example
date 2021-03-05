@@ -20,6 +20,7 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
   const [descriptor, setDescriptor] = useState<string | null>('');
 
   useEffect(() => {
+    // discover characteristic descriptors
     char.descriptors().then((desc) => {
       desc[0]?.read().then((val) => {
         if (val) {
@@ -27,34 +28,41 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
         }
       });
     });
+
+    // read on the characteristic 👏
     char.monitor((err, cha) => {
       if (err) {
         console.warn('ERROR');
         return;
       }
+      // each received value has to be decoded with a Base64 algorythm you can find on the Internet (or in my repository 😉)
       setMeasure(decodeBleString(cha?.value));
     });
   }, [char]);
+
+  // write on a charactestic the number 6 (e.g.)
+  const writeCharacteristic = () => {
+    // encode the string with the Base64 algorythm
+    char
+      .writeWithResponse(Base64.encode('6'))
+      .then(() => {
+        console.warn('Success');
+      })
+      .catch((e) => console.log('Error', e));
+  };
 
   return (
     <TouchableOpacity
       key={char.uuid}
       style={styles.container}
-      onPress={() => {
-        char
-          .writeWithResponse(Base64.encode('6'))
-          .then(() => {
-            console.warn('Success');
-          })
-          .catch((e) => console.log('Error', e));
-      }}>
-      <Text style={{ color: 'red', fontSize: 24 }}>{measure}</Text>
-      <Text style={{ color: 'blue', fontSize: 24 }}>{descriptor}</Text>
+      onPress={writeCharacteristic}>
+      <Text style={styles.measure}>{measure}</Text>
+      <Text style={styles.descriptor}>{descriptor}</Text>
       <Text>{`isIndicatable : ${char.isIndicatable}`}</Text>
       <Text>{`isNotifiable : ${char.isNotifiable}`}</Text>
       <Text>{`isNotifying : ${char.isNotifying}`}</Text>
       <Text>{`isReadable : ${char.isReadable}`}</Text>
-      <TouchableOpacity style={{ backgroundColor: 'red' }}>
+      <TouchableOpacity>
         <Text>{`isWritableWithResponse : ${char.isWritableWithResponse}`}</Text>
       </TouchableOpacity>
       <Text>{`isWritableWithoutResponse : ${char.isWritableWithoutResponse}`}</Text>
@@ -73,6 +81,8 @@ const styles = StyleSheet.create({
     elevation: 5,
     padding: 12,
   },
+  measure: { color: 'red', fontSize: 24 },
+  descriptor: { color: 'blue', fontSize: 24 },
 });
 
 export { CharacteristicCard };

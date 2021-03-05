@@ -2,21 +2,21 @@ import React, { useEffect, useReducer, useState } from 'react';
 import {
   ActivityIndicator,
   Button,
+  FlatList,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { DeviceCard } from '../components/DeviceCard';
 import { BleManager, Device } from 'react-native-ble-plx';
 import { theme } from '../theme';
 
-type HomeScreenProps = {};
-
 const manager = new BleManager();
 
+// Reducer to add only the devices which have not been added yet
+// When the bleManager search for devices, each time it detect a ble device, it returns the ble device even if this one has already been returned
 const reducer = (
   state: Device[],
   action: { type: 'ADD_DEVICE'; payload: Device } | { type: 'CLEAR' },
@@ -24,6 +24,8 @@ const reducer = (
   switch (action.type) {
     case 'ADD_DEVICE':
       const { payload: device } = action;
+
+      // check if the detected device is not already added to the list
       if (device && !state.find((dev) => dev.id === device.id)) {
         return [...state, device];
       }
@@ -35,23 +37,30 @@ const reducer = (
   }
 };
 
-const HomeScreen = ({}: HomeScreenProps) => {
+const HomeScreen = () => {
+  // reducer to store and display detected ble devices
   const [scannedDevices, dispatch] = useReducer(reducer, []);
+
+  // state to give the user a feedback about the manager scanning devices
   const [isLoading, setIsLoading] = useState(false);
 
   const scanDevices = () => {
+    // display the Activityindicator
     setIsLoading(true);
 
+    // scan devices
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
         console.warn(error);
       }
 
+      // if a device is detected add the device to the list by dispatching the action into the reducer
       if (scannedDevice) {
         dispatch({ type: 'ADD_DEVICE', payload: scannedDevice });
       }
     });
 
+    // stop scanning devices after 5 seconds
     setTimeout(() => {
       manager.stopDeviceScan();
       setIsLoading(false);
@@ -69,7 +78,7 @@ const HomeScreen = ({}: HomeScreenProps) => {
           onPress={() => dispatch({ type: 'CLEAR' })}
         />
         {isLoading ? (
-          <View style={{ marginVertical: 6 }}>
+          <View style={styles.activityIndicatorContainer}>
             <ActivityIndicator color={'teal'} size={25} />
           </View>
         ) : (
@@ -98,9 +107,6 @@ const HomeScreen = ({}: HomeScreenProps) => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
   body: {
     backgroundColor: Colors.red,
   },
@@ -123,6 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.secondary,
     paddingHorizontal: theme.spacing * 2,
   },
+  activityIndicatorContainer: { marginVertical: 6 },
 });
 
 export { HomeScreen };

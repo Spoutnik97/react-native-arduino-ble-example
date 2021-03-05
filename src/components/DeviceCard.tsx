@@ -16,17 +16,20 @@ const DeviceCard = ({ device }: DeviceCardProps) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    // is the device connected?
     device.isConnected().then(setIsConnected);
   }, [device]);
 
   return (
     <TouchableOpacity
       style={styles.container}
+      // navigate to the Device Screen
       onPress={() => navigation.navigate('Device', { device })}>
       <Text>{`Id : ${device.id}`}</Text>
       <Text>{`Name : ${device.name}`}</Text>
       <Text>{`Is connected : ${isConnected}`}</Text>
       <Text>{`RSSI : ${device.rssi}`}</Text>
+      {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
       <Text>{`Manufacturer : ${Base64.decode(
         device.manufacturerData?.replace(/[=]/g, ''),
       )}`}</Text>

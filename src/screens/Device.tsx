@@ -9,38 +9,41 @@ const DeviceScreen = ({
   route,
   navigation,
 }: StackScreenProps<RootStackParamList, 'Device'>) => {
+  // get the device object which was given through navigation params
   const { device } = route.params;
 
   const [isConnected, setIsConnected] = useState(false);
   const [services, setServices] = useState<Service[]>([]);
 
+  // handle the device disconnection
   const disconnectDevice = useCallback(async () => {
+    navigation.goBack();
     const isDeviceConnected = await device.isConnected();
     if (isDeviceConnected) {
       await device.cancelConnection();
     }
-  }, [device]);
+  }, [device, navigation]);
 
   useEffect(() => {
     const getDeviceInformations = async () => {
-      device
-        .connect()
-        .then((dvc) => {
-          setIsConnected(true);
-          return dvc.discoverAllServicesAndCharacteristics();
-        })
-        .then((dvc) => {
-          dvc.services().then((value) => {
-            setServices(value);
-          });
-        });
+      // connect to the device
+      const connectedDevice = await device.connect();
+      setIsConnected(true);
+
+      // discover all device services and characteristics
+      const allServicesAndCharacteristics = await connectedDevice.discoverAllServicesAndCharacteristics();
+      // get the services only
+      const discoveredServices = await allServicesAndCharacteristics.services();
+      setServices(discoveredServices);
     };
+
     getDeviceInformations();
 
     device.onDisconnected(() => {
       navigation.navigate('Home');
     });
 
+    // give a callback to the useEffect to disconnect the device when we will leave the device screen
     return () => {
       disconnectDevice();
     };
@@ -48,13 +51,7 @@ const DeviceScreen = ({
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Button
-        title="disconnect"
-        onPress={() => {
-          navigation.goBack();
-          disconnectDevice();
-        }}
-      />
+      <Button title="disconnect" onPress={disconnectDevice} />
       <View>
         <View style={styles.header}>
           <Text>{`Id : ${device.id}`}</Text>
@@ -65,6 +62,7 @@ const DeviceScreen = ({
           <Text>{`ServiceData : ${device.serviceData}`}</Text>
           <Text>{`UUIDS : ${device.serviceUUIDs}`}</Text>
         </View>
+        {/* Display a list of all services */}
         {services &&
           services.map((service) => <ServiceCard service={service} />)}
       </View>
