@@ -45,27 +45,27 @@ const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const scanDevices = () => {
-    // display the Activityindicator
-    setIsLoading(true);
+                              // display the Activityindicator
+                              setIsLoading(true);
 
-    // scan devices
-    manager.startDeviceScan(null, null, (error, scannedDevice) => {
-      if (error) {
-        console.warn(error);
-      }
+                              // scan devices
+                              manager.startDeviceScan(null, null, (error, scannedDevice) => {
+                                                                                              if (error) {
+                                                                                                          console.warn(error);
+                                                                                                          }
 
-      // if a device is detected add the device to the list by dispatching the action into the reducer
-      if (scannedDevice) {
-        dispatch({ type: 'ADD_DEVICE', payload: scannedDevice });
-      }
-    });
+                                                                                            // if a device is detected add the device to the list by dispatching the action into the reducer
+                                                                                            if (scannedDevice) {
+                                                                                                                dispatch({ type: 'ADD_DEVICE', payload: scannedDevice });
+                                                                                                                }
+                                                                                            });
 
-    // stop scanning devices after 5 seconds
-    setTimeout(() => {
-      manager.stopDeviceScan();
-      setIsLoading(false);
-    }, 5000);
-  };
+                              // stop scanning devices after 5 seconds
+                                setTimeout(() => {
+                                                  manager.stopDeviceScan();
+                                                  setIsLoading(false);
+                                                  }, 5000);
+                              };
 
   const ListHeaderComponent = () => (
     <View style={styles.body}>
