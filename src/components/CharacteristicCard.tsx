@@ -6,6 +6,8 @@ import { Base64 } from '../lib/base64';
 
 type CharacteristicCardProps = {
   char: Characteristic;
+  action: string;
+  name: string;
 };
 
 const decodeBleString = (value: string | undefined | null): string => {
@@ -15,7 +17,7 @@ const decodeBleString = (value: string | undefined | null): string => {
   return Base64.decode(value).charCodeAt(0);
 };
 
-const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
+const CharacteristicCard = ({ char , action, name }: CharacteristicCardProps) => {
   const [measure, setMeasure] = useState('');
   const [descriptor, setDescriptor] = useState<string | null>('');
 
@@ -46,9 +48,9 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
   const writeCharacteristic = () => {
     // encode the string with the Base64 algorythm
     char
-      .writeWithResponse(Base64.encode('Cool'))
+      .writeWithResponse(Base64.encode(action))
       .then(() => {
-        console.warn('Success');
+        // console.warn('Success Baby');
       })
       .catch((e) => console.log('Error', e));
   };
@@ -58,7 +60,8 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
       key={char.uuid}
       style={styles.container}
       onPress={writeCharacteristic}>
-      <Text style={styles.measure}>{measure}</Text>
+      <Text>{name}</Text>
+      {/* <Text style={styles.measure}>{measure}</Text>
       <Text style={styles.descriptor}>{descriptor}</Text>
       <Text>{`isIndicatable : ${char.isIndicatable}`}</Text>
       <Text>{`isNotifiable : ${char.isNotifiable}`}</Text>
@@ -67,7 +70,7 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
       <TouchableOpacity>
         <Text>{`isWritableWithResponse : ${char.isWritableWithResponse}`}</Text>
       </TouchableOpacity>
-      <Text>{`isWritableWithoutResponse : ${char.isWritableWithoutResponse}`}</Text>
+      <Text>{`isWritableWithoutResponse : ${char.isWritableWithoutResponse}`}</Text> */}
     </TouchableOpacity>
   );
 };

@@ -37,18 +37,39 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
         onPress={() => {
           setAreCharacteristicsVisible((prev) => !prev);
         }}>
-        <Text>{`UUID : ${service.uuid}`}</Text>
+        {/* <Text>{`UUID : ${service.uuid}`}</Text> */}
+        <Text>Button</Text>
       </TouchableOpacity>
 
       {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} />
+          <CharacteristicCard key={char.id} char={char} action = "1" name = "Automow"/>
         ))}
-      {descriptors &&
+        {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "2" name = "Home"/>
+        ))}
+                {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "3" name = "Forward"/>
+        ))}
+                {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "4"/>
+        ))}
+                {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "5"/>
+        ))}
+      {/* {descriptors &&
         descriptors.map((descriptor) => (
           <DescriptorCard key={descriptor.id} descriptor={descriptor} />
-        ))}
+        ))} */}
     </View>
   );
 };
