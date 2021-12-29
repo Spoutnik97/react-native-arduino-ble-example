@@ -40,11 +40,13 @@ const CharacteristicCard = ({ char }: CharacteristicCardProps) => {
     });
   }, [char]);
 
+
+//This writes all the different characteristics that are available for a particular service. 
   // write on a charactestic the number 6 (e.g.)
   const writeCharacteristic = () => {
     // encode the string with the Base64 algorythm
     char
-      .writeWithResponse(Base64.encode('6'))
+      .writeWithResponse(Base64.encode('Cool'))
       .then(() => {
         console.warn('Success');
       })

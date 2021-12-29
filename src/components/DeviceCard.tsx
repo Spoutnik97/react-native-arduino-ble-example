@@ -25,16 +25,8 @@ const DeviceCard = ({ device }: DeviceCardProps) => {
       style={styles.container}
       // navigate to the Device Screen
       onPress={() => navigation.navigate('Device', { device })}>
-      <Text>{`Id : ${device.id}`}</Text>
       <Text>{`Name : ${device.name}`}</Text>
-      <Text>{`Is connected : ${isConnected}`}</Text>
-      <Text>{`RSSI : ${device.rssi}`}</Text>
-      {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
-      <Text>{`Manufacturer : ${Base64.decode(
-        device.manufacturerData?.replace(/[=]/g, ''),
-      )}`}</Text>
-      <Text>{`ServiceData : ${device.serviceData}`}</Text>
-      <Text>{`UUIDS : ${device.serviceUUIDs}`}</Text>
+      <Text>{`Id : ${device.id}`}</Text>
     </TouchableOpacity>
   );
 };
@@ -53,3 +45,11 @@ const styles = StyleSheet.create({
 });
 
 export { DeviceCard };
+
+      // {/* <Text>{`RSSI : ${device.rssi}`}</Text>
+      // {/* Decode the ble device manufacturer which is encoded with the base64 algorythme */}
+      // <Text>{`Manufacturer : ${Base64.decode(
+      //   device.manufacturerData?.replace(/[=]/g, ''),
+      // )}`}</Text>
+      // <Text>{`ServiceData : ${device.serviceData}`}</Text>
+      // <Text>{`UUIDS : ${device.serviceUUIDs}`}</Text> */}
