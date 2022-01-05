@@ -44,28 +44,44 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} action = "1" name = "Automow"/>
+          <CharacteristicCard key={char.id} char={char} action = "{nm}" name = "Mower On/Off"/>
         ))}
         {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} action = "2" name = "Home"/>
+          <CharacteristicCard key={char.id} char={char} action = "{nf}" name = "Forward"/>
         ))}
                 {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} action = "3" name = "Forward"/>
+          <CharacteristicCard key={char.id} char={char} action = "{nb}" name = "Back"/>
         ))}
                 {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} action = "4"/>
+          <CharacteristicCard key={char.id} char={char} action = "{nr}" name = "Right"/>
         ))}
                 {areCharacteristicsVisible &&
         characteristics &&
         characteristics.map((char) => (
-          <CharacteristicCard key={char.id} char={char} action = "5"/>
+          <CharacteristicCard key={char.id} char={char} action = "{nl}" name = "Left"/>
         ))}
+                        {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "{ns}" name = "Stop"/>
+        ))}
+                                {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "{ra}" name = "Automow"/>
+        ))}
+                                        {areCharacteristicsVisible &&
+        characteristics &&
+        characteristics.map((char) => (
+          <CharacteristicCard key={char.id} char={char} action = "{rh}" name = "Home"/>
+        ))}
+
       {/* {descriptors &&
         descriptors.map((descriptor) => (
           <DescriptorCard key={descriptor.id} descriptor={descriptor} />

@@ -64,7 +64,7 @@ const DeviceScreen = ({
         </View>
         {/* Display a list of all services */}
         {services &&
-          services.map((service) => <ServiceCard service={service} action = "1" name ="balls"/>)}
+          services.map((service) => <ServiceCard service={service} />)}
       </View>
     </ScrollView>
   );
