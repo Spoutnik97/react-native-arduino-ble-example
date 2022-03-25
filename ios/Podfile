@@ -8,7 +8,6 @@ target 'BLEProject' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
 
   target 'BLEProjectTests' do
     inherit! :complete
